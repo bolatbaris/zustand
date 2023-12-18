@@ -1,12 +1,14 @@
 import React from 'react';
-import {SafeAreaView, Text} from 'react-native';
+import {SafeAreaView} from 'react-native';
+import MMKVInstance from './src/db/mmkv';
+import IndexPage from './src/pages';
 
-function App(): React.JSX.Element {
+export const mmkvInstance = new MMKVInstance();
+
+export default function App() {
   return (
     <SafeAreaView>
-      <Text>Zustand TODO</Text>
+      <IndexPage />
     </SafeAreaView>
   );
 }
-
-export default App;
