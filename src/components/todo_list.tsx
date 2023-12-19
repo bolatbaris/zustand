@@ -1,10 +1,21 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import Todo from '../models/todo.model';
 import useTodoStore from '../store';
 
 export default function TodoList() {
   const todoList = useTodoStore(state => state.todoList);
+
+  const sortedList = useMemo(
+    () =>
+      todoList
+        .slice(0)
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        ),
+    [todoList],
+  );
   const renderCount = useRef(0);
 
   useEffect(() => {
@@ -13,14 +24,10 @@ export default function TodoList() {
 
   return (
     <View style={{backgroundColor: 'white', padding: 10}}>
-      {todoList
-        .sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        )
-        .map(todo => (
-          <TodoCard key={todo.id} todo={todo} />
-        ))}
+      <Text>Render Count: {renderCount.current}</Text>
+      {sortedList.map(todo => (
+        <TodoCard key={todo.id} todo={todo} />
+      ))}
     </View>
   );
 }

@@ -1,3 +1,4 @@
+import {produce} from 'immer';
 import {create} from 'zustand';
 import {createNewTodo, getTodoList, toggleTodo} from '../domain/todos';
 import Todo from '../models/todo.model';
@@ -43,12 +44,14 @@ const useTodoStore = create<State & Actions>((set, get) => ({
       set({error: 'Failed to create new TODO', loading: undefined});
       return;
     }
-    set(state => ({
-      todoList: [...state.todoList, newTodo],
-      inputText: '',
-      loading: undefined,
-      error: undefined,
-    }));
+    set(
+      produce(state => {
+        state.todoList.push(newTodo);
+        state.inputText = '';
+        state.loading = undefined;
+        state.error = undefined;
+      }),
+    );
   },
   toggleTodo: async (id: string) => {
     set({loading: id});
